@@ -60,6 +60,18 @@ app.delete('/api/tasks/:taskID',(req,res)=>{
 
   return res.send(res.status);
 })
+
+app.delete('/api/store/:id',(req,res)=>{
+  store= {
+    ...store,
+    users: store.users.filter(user => user.id !== req.params.id)
+  };
+  if(store.users.filter(user => user.id === req.params.id)){
+    return res.send(res.status);
+  }
+
+  return res.send(res.status);
+})
 app.post('/api/store/users',(req,res)=>{
     const user = {
       id: req.body.idUser,
@@ -77,17 +89,6 @@ app.post('/api/store/users',(req,res)=>{
     }
     return res.send(res.status);
     
-})
-app.delete('/api/store/:id',(req,res)=>{
-  store= {
-    ...store,
-    users: store.users.filter(user => user.id !== req.params.id)
-  };
-  if(store.users.filter(user => user.id === req.params.id)){
-    return res.send(res.status);
-  }
-
-  return res.send(res.status);
 })
 app.post('/api/tasks/:userID',(req,res)=>{
   console.log(req.params.userID)
