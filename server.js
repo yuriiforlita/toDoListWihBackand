@@ -155,35 +155,6 @@ app.put('/api/:userId/:id',(req,res)=>{
     return res.send(res.status);
   }
   return res.send(res.status);
-  case "PRIORITY_TASK":
-  store = {
-    ...store,
-    users: store.users.map(user => {
-      if (req.params.userId  === user.id) {
-        user.tasks = user.tasks.map(task => {
-          if (req.params.id  === task.id) {
-            const valueNumber = req.body.text.match(/.{0,1}/g);
-            return {
-              ...task,
-              prioritytask: +valueNumber[0],
-              priorityvalue: req.body.text
-            };
-          } else {
-            return task;
-          }
-        });
-      }
-      return user;
-    })
-  };
-  if (
-    store.users.map(user =>
-      user.tasks.find(task => task.priorityvalue === req.body.text)
-    )
-  ) {
-    return res.send(res.status);
-  }
-  return res.send(res.status);
   case "CROSSE_TASK":
 
     store = {
@@ -221,5 +192,35 @@ app.put('/api/:userId/:id',(req,res)=>{
   }
 
 })
+  case "PRIORITY_TASK":
+  store = {
+    ...store,
+    users: store.users.map(user => {
+      if (req.params.userId  === user.id) {
+        user.tasks = user.tasks.map(task => {
+          if (req.params.id  === task.id) {
+            const valueNumber = req.body.text.match(/.{0,1}/g);
+            return {
+              ...task,
+              prioritytask: +valueNumber[0],
+              priorityvalue: req.body.text
+            };
+          } else {
+            return task;
+          }
+        });
+      }
+      return user;
+    })
+  };
+  if (
+    store.users.map(user =>
+      user.tasks.find(task => task.priorityvalue === req.body.text)
+    )
+  ) {
+    return res.send(res.status);
+  }
+  return res.send(res.status);
+
 const port = 6000;
 app.listen(port,()=> console.log("started"));
