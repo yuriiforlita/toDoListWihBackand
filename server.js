@@ -60,6 +60,18 @@ app.delete('/api/tasks/:taskID',(req,res)=>{
 
   return res.send(res.status);
 })
+
+app.delete('/api/store/:id',(req,res)=>{
+  store= {
+    ...store,
+    users: store.users.filter(user => user.id !== req.params.id)
+  };
+  if(store.users.filter(user => user.id === req.params.id)){
+    return res.send(res.status);
+  }
+
+  return res.send(res.status);
+})
 app.post('/api/store/users',(req,res)=>{
     const user = {
       id: req.body.idUser,
@@ -77,17 +89,6 @@ app.post('/api/store/users',(req,res)=>{
     }
     return res.send(res.status);
     
-})
-app.delete('/api/store/:id',(req,res)=>{
-  store= {
-    ...store,
-    users: store.users.filter(user => user.id !== req.params.id)
-  };
-  if(store.users.filter(user => user.id === req.params.id)){
-    return res.send(res.status);
-  }
-
-  return res.send(res.status);
 })
 app.post('/api/tasks/:userID',(req,res)=>{
   console.log(req.params.userID)
@@ -154,35 +155,6 @@ app.put('/api/:userId/:id',(req,res)=>{
     return res.send(res.status);
   }
   return res.send(res.status);
-  case "PRIORITY_TASK":
-  store = {
-    ...store,
-    users: store.users.map(user => {
-      if (req.params.userId  === user.id) {
-        user.tasks = user.tasks.map(task => {
-          if (req.params.id  === task.id) {
-            const valueNumber = req.body.text.match(/.{0,1}/g);
-            return {
-              ...task,
-              prioritytask: +valueNumber[0],
-              priorityvalue: req.body.text
-            };
-          } else {
-            return task;
-          }
-        });
-      }
-      return user;
-    })
-  };
-  if (
-    store.users.map(user =>
-      user.tasks.find(task => task.priorityvalue === req.body.text)
-    )
-  ) {
-    return res.send(res.status);
-  }
-  return res.send(res.status);
   case "CROSSE_TASK":
 
     store = {
@@ -220,5 +192,35 @@ app.put('/api/:userId/:id',(req,res)=>{
   }
 
 })
+  case "PRIORITY_TASK":
+  store = {
+    ...store,
+    users: store.users.map(user => {
+      if (req.params.userId  === user.id) {
+        user.tasks = user.tasks.map(task => {
+          if (req.params.id  === task.id) {
+            const valueNumber = req.body.text.match(/.{0,1}/g);
+            return {
+              ...task,
+              prioritytask: +valueNumber[0],
+              priorityvalue: req.body.text
+            };
+          } else {
+            return task;
+          }
+        });
+      }
+      return user;
+    })
+  };
+  if (
+    store.users.map(user =>
+      user.tasks.find(task => task.priorityvalue === req.body.text)
+    )
+  ) {
+    return res.send(res.status);
+  }
+  return res.send(res.status);
+
 const port = 6000;
 app.listen(port,()=> console.log("started"));
